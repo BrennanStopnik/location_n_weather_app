@@ -76,6 +76,26 @@ def results(request):
     else:
         return render(request, 'index.html')
 
+def weather_results(request):
+
+    if request.method == 'POST':
+        address = request.POST['address']
+        data = {
+        'key': LOCATION_API_TOKEN,
+        'q': address,
+        'format': 'json'
+        }
+        try:
+            response = rqs.get(LOCATION_API_URL, params=data).json()
+        except Exception as e:
+            raise e
+
+        lat, lon = approx_coordinates(float(response[0]['lat']), float(response[0]['lon']))
+        res = get_weather_info(lat, lon)
+        return render(request, 'weather_stuff/weather_results.html', {'res': res})
+       # return HttpResponse(f"Lat = {lat} and Lon = {lon}")  
+    else:
+        return render(request, 'index.html')
 
 
 
