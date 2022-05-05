@@ -36,6 +36,8 @@ def get_weather_info(lat, lon):
     weather_data = rqs.get(WEATHER_API).json()
 
     result_dict = dict()
+    result_dict['lat'] = lat
+    result_dict['long'] = lon
       
     current_temp = weather_data['main']['temp']
     result_dict['current_temp'] = kelvin_to_fahrenheit(current_temp)
@@ -71,7 +73,7 @@ def results(request):
 
         lat, lon = approx_coordinates(float(response[0]['lat']), float(response[0]['lon']))
         res = get_weather_info(lat, lon)
-        return render(request, 'weather_stuff/results.html', {'res': res})
+        return render(request, 'weather_stuff/results.html', res)
        # return HttpResponse(f"Lat = {lat} and Lon = {lon}")  
     else:
         return render(request, 'index.html')
@@ -92,7 +94,7 @@ def weather_results(request):
 
         lat, lon = approx_coordinates(float(response[0]['lat']), float(response[0]['lon']))
         res = get_weather_info(lat, lon)
-        return render(request, 'weather_stuff/weather_results.html', {'res': res})
+        return render(request, 'weather_stuff/weather_results.html', res)
        # return HttpResponse(f"Lat = {lat} and Lon = {lon}")  
     else:
         return render(request, 'index.html')
